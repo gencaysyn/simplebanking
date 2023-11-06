@@ -31,8 +31,9 @@ public class Account {
         }
     }
 
-    public void post(Transaction transaction) {
+    public void post(Transaction transaction) throws InsufficientBalanceException {
         transaction.execute(this);
+        transactions.add(transaction);
     }
 
     public void deposit(double amount) {
@@ -45,5 +46,37 @@ public class Account {
         } else {
             throw new InsufficientBalanceException();
         }
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public ArrayList<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(ArrayList<Transaction> transactions) {
+        this.transactions = transactions;
     }
 }

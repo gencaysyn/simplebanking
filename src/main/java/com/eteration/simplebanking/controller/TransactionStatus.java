@@ -1,8 +1,13 @@
 package com.eteration.simplebanking.controller;
 
-import lombok.Data;
-
-@Data
 public class TransactionStatus {
     private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
