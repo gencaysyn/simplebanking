@@ -1,17 +1,20 @@
 package com.eteration.simplebanking.controller;
 
-// This class is a place holder you can change the complete implementation
+import com.eteration.simplebanking.model.Account;
+import com.eteration.simplebanking.model.Transaction;
+import org.springframework.http.ResponseEntity;
+
 public class AccountController {
 
 
-    public Object getAccount() {
+    public ResponseEntity<Account> getAccount(String accountNumber) {
         return null;
     }
 
-    public Object credit( ) {
+    public ResponseEntity<TransactionStatus> credit(String accountNumber, Transaction transaction) {
         return null;
     }
-    public Object debit() {
+    public ResponseEntity<TransactionStatus> debit(String accountNumber, Transaction transaction) {
         return null;
 	}
 }
