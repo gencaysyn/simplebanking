@@ -3,12 +3,21 @@ package com.eteration.simplebanking.model;
 
 
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "transaction_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 	private LocalDateTime date;
     private double amount;
+    private String approvalCode;
+
+    public Transaction(){}
 
     public Transaction(double amount) {
         this.date = LocalDateTime.now();
@@ -31,6 +40,14 @@ public abstract class Transaction {
         this.amount = amount;
     }
 
+    public String getApprovalCode() {
+        return approvalCode;
+    }
+
+    public void setApprovalCode(String approvalCode) {
+        this.approvalCode = approvalCode;
+    }
+
     @Override
     public String toString() {
         return "Transaction{" +
@@ -39,5 +56,7 @@ public abstract class Transaction {
                 '}';
     }
 
-    public abstract void execute(Account account) throws InsufficientBalanceException;
+
+
+    public abstract void execute(BankAccount bankAccount) throws InsufficientBalanceException;
 }

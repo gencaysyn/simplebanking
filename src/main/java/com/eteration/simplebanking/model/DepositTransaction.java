@@ -1,17 +1,24 @@
 package com.eteration.simplebanking.model;
 
-import lombok.Getter;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
-@Getter
-public class DepositTransaction  extends Transaction{
-    public DepositTransaction(double amount){
+@Entity
+@DiscriminatorValue("DepositTransaction")
+public class DepositTransaction extends Transaction {
+
+    public DepositTransaction(){
+        super();
+    }
+    public DepositTransaction(double amount) {
         super(amount);
     }
 
     @Override
-    public void execute(Account account) throws InsufficientBalanceException {
-        account.deposit(super.getAmount());
+    public void execute(BankAccount bankAccount) {
+        bankAccount.deposit(super.getAmount());
     }
-
-
+    public String getType() {
+        return "DepositTransaction";
+    }
 }

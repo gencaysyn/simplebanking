@@ -1,12 +1,23 @@
 package com.eteration.simplebanking.model;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
+@Entity
+@DiscriminatorValue("BillPaymentTransaction")
 public class BillPaymentTransaction extends Transaction {
-    private final String payee;
+    private String payee;
+
+    public BillPaymentTransaction() {
+    }
 
     public BillPaymentTransaction(String payee, double amount) {
         super(amount);
         this.payee = payee;
+    }
+
+    public String getType(){
+        return "BillPaymentTransaction";
     }
 
     @Override
@@ -15,7 +26,7 @@ public class BillPaymentTransaction extends Transaction {
     }
 
     @Override
-    public void execute(Account account) throws InsufficientBalanceException {
-        account.withdraw(getAmount());
+    public void execute(BankAccount bankAccount) throws InsufficientBalanceException {
+        bankAccount.withdraw(getAmount());
     }
 }

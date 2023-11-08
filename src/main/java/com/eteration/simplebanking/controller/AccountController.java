@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/account/v1")
 public class AccountController {
@@ -16,33 +14,35 @@ public class AccountController {
     public AccountService accountService;
 
     @GetMapping("/{accountNumber}")
-    public ResponseEntity<Account> getAccount(@PathVariable String accountNumber) {
-        Account account = accountService.findAccount(accountNumber);
-        if(account != null){
-            return new ResponseEntity<>(account, HttpStatus.OK);
+    public ResponseEntity<BankAccount> getAccount(@PathVariable String accountNumber) {
+        BankAccount bankAccount = accountService.findAccount(accountNumber);
+        if(bankAccount != null){
+            return new ResponseEntity<>(bankAccount, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/credit/{accountNumber}")
-    public ResponseEntity<TransactionStatus> credit(@PathVariable String accountNumber, @RequestBody Transaction transaction) throws InsufficientBalanceException {
-        Account account = accountService.findAccount(accountNumber);
-        if(account == null){
+    public ResponseEntity<TransactionStatus> credit(@PathVariable String accountNumber, @RequestBody TransactionRequest tr) throws InsufficientBalanceException {
+        BankAccount bankAccount = accountService.findAccount(accountNumber);
+        if(bankAccount == null){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        account.post(new DepositTransaction(transaction.getAmount()));
-        return new ResponseEntity<>(new TransactionStatus("OK", UUID.randomUUID().toString()), HttpStatus.OK);
+        bankAccount.post(new DepositTransaction(tr.getAmount()));
+        accountService.saveAccount(bankAccount);
+        return new ResponseEntity<>(new TransactionStatus("OK", bankAccount.getTransactions().get(bankAccount.getTransactions().size()-1).getApprovalCode()), HttpStatus.OK);
 
     }
     @PostMapping("/debit/{accountNumber}")
-    public ResponseEntity<TransactionStatus> debit(String accountNumber, Transaction transaction) throws InsufficientBalanceException {
-        Account account = accountService.findAccount(accountNumber);
-        if(account == null){
+    public ResponseEntity<TransactionStatus> debit(@PathVariable String accountNumber,  @RequestBody TransactionRequest tr) throws InsufficientBalanceException {
+        BankAccount bankAccount = accountService.findAccount(accountNumber);
+        if(bankAccount == null){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        account.post(new WithdrawalTransaction(transaction.getAmount()));
-        return new ResponseEntity<>(new TransactionStatus("OK", UUID.randomUUID().toString()), HttpStatus.OK);
+        bankAccount.post(new WithdrawalTransaction(tr.getAmount()));
+        accountService.saveAccount(bankAccount);
+        return new ResponseEntity<>(new TransactionStatus("OK", bankAccount.getTransactions().get(bankAccount.getTransactions().size()-1).getApprovalCode()), HttpStatus.OK);
 	}
 }
