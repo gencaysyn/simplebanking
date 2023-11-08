@@ -16,6 +16,6 @@ public class BillPaymentTransaction extends Transaction {
 
     @Override
     public void execute(Account account) throws InsufficientBalanceException {
-        account.debit(getAmount());
+        account.withdraw(getAmount());
     }
 }

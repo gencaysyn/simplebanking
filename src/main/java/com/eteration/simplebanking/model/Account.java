@@ -1,13 +1,16 @@
 package com.eteration.simplebanking.model;
 
 
-import lombok.Data;
 
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.ArrayList;
 
-@Data
+@Entity
 public class Account {
     private String owner;
+    @Id
     private String accountNumber;
     private double balance;
     private ArrayList<Transaction> transactions;
@@ -21,14 +24,6 @@ public class Account {
 
     public void credit(double amount) {
         balance += amount;
-    }
-
-    public void debit(double amount) throws InsufficientBalanceException {
-        if (balance >= amount) {
-            balance -= amount;
-        } else {
-            throw new InsufficientBalanceException();
-        }
     }
 
     public void post(Transaction transaction) throws InsufficientBalanceException {
